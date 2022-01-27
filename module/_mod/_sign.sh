@@ -35,8 +35,4 @@ print_code(){
 	ui_print ""
 }
 
-if [[ ${1} == "" ]]; then
-  print_code "Miseryset"
-else
-  print_code ${1}
-fi
+print_code "Miseryset"

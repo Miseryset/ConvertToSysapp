@@ -1,7 +1,7 @@
-id=
-name=
+id=ConvertToSysapp
+name=转为系统应用
 version=V1
 versionCode=1
 author=Miseryset
-description=
+description=将第三方应用转为系统应用
 updateJson=

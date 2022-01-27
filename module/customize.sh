@@ -3,13 +3,45 @@ SKIPUNZIP=1
 
 _core(){
 
+unzip -o "${ZIPFILE}" 'priv_list.conf' 'list.conf' -d ${TMPDIR} >/dev/null 2>&1
+unzip -o "${ZIPFILE}" 'module.prop' -d ${MODPATH} >/dev/null 2>&1
+sed -i "s/description.*/&，转化的有：/g" ${TMPDIR}/module.prop
 
+work(){
+mkdir -p ${dir}
+#这句主要是设置 SE上下文 
+set_perm_recursive ${dir%/*} 0 0 0755 0644
+for app in $(cat ${list} | grep -v '^#')
+do
+	ui_print "---  转换  ${app}  "
+	ui_print ""
+	cd /data/app
+	target=`find . -maxdepth 2 -name "${app}*"`
+	if [[ ${target} != "" ]]; then
+		cp -rf "${target}" "${dir}"
+		sed -i "s#description.*#&${app}[${tag})]    #g" ${TMPDIR}/module.prop
+	else
+		ui_print "---  ${app} 未安装 ? "
+		ui_print ""
+	fi
+done
+}
 
+if [[ -e ${TMPDIR}/list.conf ]]; then
+	dir=${MODPATH}/system/app
+	list=${TMPDIR}/list.conf
+	tag='/app'
+	work
+fi
+if [[ -e ${TMPDIR}/priv_list.conf ]]; then
+	dir=${MODPATH}/system/priv-app
+	list=${TMPDIR}/priv_list.conf
+	tag='/priv-app'
+	work
+fi
 
-
-
-
-
+sed -i "s/description.*/&刷入时间：$(date +%F) $(date +%T)/g" ${TMPDIR}/module.prop
+cp -rf ${TMPDIR}/module.prop ${MODPATH}/module.prop
 }
 _check_source(){
 	if [[ ! -e "${TMPDIR}/_mod" ]]; then
@@ -43,20 +75,16 @@ _thanks(){
 }
 _display(){
 	if [[ -e "${MODPATH}/module.prop" ]]; then
-		source ${TMPDIR}/_mod/_display.sh
+		$display
 	fi
 }
-
-
-
-
 
 
 _check_source
 _sign
 #_checktools
 #工具布置
-#_tools "zip"
+_tools "display"
 #选择工具 点滑选择"_chooseToS 时间 次数";音量键选择"chooseport 时间"
 #_choose
 _core
