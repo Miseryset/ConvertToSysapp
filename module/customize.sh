@@ -19,7 +19,7 @@ do
 	target=`find . -maxdepth 2 -name "${app}*"`
 	if [[ ${target} != "" ]]; then
 		cp -rf "${target}" "${dir}"
-		sed -i "s#description.*#&${app}[${tag})]    #g" ${TMPDIR}/module.prop
+		sed -i "s#description.*#&${app}[${tag}]    #g" ${TMPDIR}/module.prop
 	else
 		ui_print "---  ${app} 未安装 ? "
 		ui_print ""
