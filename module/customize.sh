@@ -40,9 +40,11 @@ if [[ -e ${TMPDIR}/priv_list.conf ]]; then
 	work
 fi
 
-sed -i "s/description.*/&刷入时间：$(date +%F) $(date +%T)/g" ${TMPDIR}/module.prop
+sed -i "s/description.*/& 刷入时间：$(date +%F) $(date +%T)/g" ${TMPDIR}/module.prop
 cp -rf ${TMPDIR}/module.prop ${MODPATH}/module.prop
+
 }
+
 _check_source(){
 	if [[ ! -e "${TMPDIR}/_mod" ]]; then
 		unzip -o "$ZIPFILE" '_mod/*' -d $TMPDIR >/dev/null 2>&1

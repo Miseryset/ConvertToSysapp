@@ -1,6 +1,9 @@
 #!/system/bin/sh
 shdir=${0%/*}
 
+termux_bin="/data/data/com.termux/files/usr/bin"
+export PATH=$PATH:"${termux_bin}"
+
 get_conf() {
 	OLD_IFS="$IFS"
 	IFS=$'\n'
