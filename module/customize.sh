@@ -25,6 +25,23 @@ do
 		ui_print ""
 	fi
 done
+}
+
+if [[ -e ${TMPDIR}/list.conf ]]; then
+	dir=${MODPATH}/system/app
+	list=${TMPDIR}/list.conf
+	tag='/app'
+	work
+fi
+if [[ -e ${TMPDIR}/priv_list.conf ]]; then
+	dir=${MODPATH}/system/priv-app
+	list=${TMPDIR}/priv_list.conf
+	tag='/priv-app'
+	work
+fi
+
+sed -i "s/description.*/& 刷入时间：$(date +%F) $(date +%T)/g" ${TMPDIR}/module.prop
+cp -rf ${TMPDIR}/module.prop ${MODPATH}/module.prop
 
 }
 _check_source(){
