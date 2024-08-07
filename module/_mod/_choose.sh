@@ -1,11 +1,27 @@
-
+choosestd(){
+  keycheck="${TMPDIR}/_mod/_tools/keycheck"
+  set_perm ${keycheck} 0 0 0777
+  ui_print "- 15s内作出选择，音量上 or 下"
+  timeout 15 $keycheck
+  case "$?" in
+    "42")
+      return volup
+    ;;
+    "41")
+      return voldown
+    ;;
+    *)
+      return volerror
+    ;;
+  esac
+}
 _chooseToS(){
 	# Original idea by chainfire and ianmacd @xda-developers
 	[ "$1" ] && local delay=$1 || local delay=5
 	[ "$2" ] && local trychance=$2 || local trychance=2
 	
 	ui_print ""
-	ui_print "---  在 $delay 秒内选择，共有 $trychance 次机会， $trychance 次均超时则使用默认  否  "
+	ui_print "- 在 $delay 秒内选择，共有 $trychance 次机会， $trychance 次均超时则使用默认  否  "
 	local count=0
 	while true; do
 		sleep $delay & timeout $delay /system/bin/getevent -l -q -c 8 2>/dev/null >${TMPDIR}/ToS
@@ -15,8 +31,8 @@ _chooseToS(){
 			return 1
 		fi
 		count=$((count + 1))
-		[ $count -lt $trychance ] && (ui_print "";ui_print "---  超时了，再试一次")
-		[ $count -eq $trychance ] && (ui_print "";ui_print "---  超时次数过多，使用默认值  否  ") && return 1 && break
+		[ $count -lt $trychance ] && (ui_print "";ui_print "-- 超时了，再试一次")
+		[ $count -eq $trychance ] && (ui_print "";ui_print "-- 超时次数过多，使用默认值  否  ") && return 1 && break
 	done
 }
 
